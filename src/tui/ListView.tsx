@@ -10,10 +10,10 @@ interface ListViewProps {
 }
 
 const columns = {
-  port: 7,
-  pid: 8,
-  process: 16,
-  project: 18
+  port: 8,
+  process: 14,
+  project: 16,
+  status: 12,
 } as const;
 
 const Row = ({ process }: { process: ListedPortProcess }) => (
@@ -21,16 +21,18 @@ const Row = ({ process }: { process: ListedPortProcess }) => (
     <Box width={columns.port}>
       <Text color={theme.cyan}>{process.port}</Text>
     </Box>
-    <Box width={columns.pid}>
-      <Text color={theme.muted}>{process.pid}</Text>
-    </Box>
     <Box width={columns.process}>
-      <Text color={theme.text}>{process.processName}</Text>
+      <Text color={theme.secondary}>{process.processName}</Text>
     </Box>
     <Box width={columns.project}>
-      <Text color={theme.muted}>{process.projectHint}</Text>
+      <Text color={theme.secondary}>{process.projectHint}</Text>
     </Box>
-    <Text color={theme.dim}>{compactPath(process.cwd)}</Text>
+    <Box width={columns.status}>
+      <Text color={process.status === "running" ? theme.running : theme.stopped}>
+        {process.status}
+      </Text>
+    </Box>
+    <Text color={theme.dimmed}>{compactPath(process.cwd)}</Text>
   </Box>
 );
 
@@ -46,24 +48,28 @@ export const ListView = ({ processes }: ListViewProps) => {
   }
 
   return (
-    <Box flexDirection="column" paddingX={1} paddingY={1}>
+    <Box flexDirection="column" paddingX={2} paddingY={1}>
       <Box marginBottom={1}>
-        <Text color={theme.green}>portx</Text>
+        <Text color={theme.cyan} bold>PORTX</Text>
+        <Text color={theme.dimmed}> list</Text>
+      </Box>
+      <Box marginBottom={1}>
+        <Text color={theme.border}>{"─".repeat(56)}</Text>
       </Box>
       <Box marginBottom={1}>
         <Box width={columns.port}>
-          <Text color={theme.muted}>port</Text>
-        </Box>
-        <Box width={columns.pid}>
-          <Text color={theme.muted}>pid</Text>
+          <Text color={theme.disabled}>PORT</Text>
         </Box>
         <Box width={columns.process}>
-          <Text color={theme.muted}>process</Text>
+          <Text color={theme.disabled}>PROCESS</Text>
         </Box>
         <Box width={columns.project}>
-          <Text color={theme.muted}>project</Text>
+          <Text color={theme.disabled}>PROJECT</Text>
         </Box>
-        <Text color={theme.muted}>path</Text>
+        <Box width={columns.status}>
+          <Text color={theme.disabled}>STATUS</Text>
+        </Box>
+        <Text color={theme.disabled}>PATH</Text>
       </Box>
       {processes.map((process) => (
         <Row key={`${process.pid}:${process.port}`} process={process} />

@@ -21,16 +21,17 @@ export const Header = ({
   isLoading,
   listCount,
   totalCount,
-  activePort
+  activePort,
 }: HeaderProps) => {
   let right = "";
-  let rightColor: string = theme.muted;
+  let rightColor: string = theme.dimmed;
 
   if (isSearching) {
     right = `/${query || "…"}`;
-    rightColor = theme.green;
+    rightColor = theme.search;
   } else if (isBusy) {
     right = "working…";
+    rightColor = theme.warning;
   } else if (isLoading) {
     right = "scanning…";
   } else if (view === "list") {
@@ -44,17 +45,23 @@ export const Header = ({
   }
 
   return (
-    <Box marginBottom={1} justifyContent="space-between">
-      <Box>
-        <Text color={theme.green}>portx</Text>
-        {view === "inspect" && activePort ? (
-          <>
-            <Text color={theme.dim}> › </Text>
-            <Text color={theme.cyan}>{activePort}</Text>
-          </>
-        ) : null}
+    <Box flexDirection="column">
+      <Box justifyContent="space-between">
+        <Box>
+          <Text color={theme.cyan} bold>PORTX</Text>
+          {view === "inspect" && activePort ? (
+            <>
+              <Text color={theme.disabled}> › </Text>
+              <Text color={theme.mutedCyan}>{activePort}</Text>
+            </>
+          ) : null}
+        </Box>
+        {right ? <Text color={rightColor}>{right}</Text> : null}
       </Box>
-      {right ? <Text color={rightColor}>{right}</Text> : null}
+      <Text color={theme.dimmed}>Local Development Port Manager</Text>
+      <Box marginTop={1}>
+        <Text color={theme.border}>{"─".repeat(56)}</Text>
+      </Box>
     </Box>
   );
 };

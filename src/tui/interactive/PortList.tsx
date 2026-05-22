@@ -14,10 +14,10 @@ const pageSize = 12;
 
 const columns = {
   marker: 3,
-  port: 7,
-  pid: 8,
-  process: 16,
-  project: 18
+  port: 8,
+  process: 14,
+  project: 16,
+  status: 12,
 } as const;
 
 const ColumnHeaders = () => (
@@ -26,49 +26,66 @@ const ColumnHeaders = () => (
       <Text> </Text>
     </Box>
     <Box width={columns.port}>
-      <Text color={theme.muted}>port</Text>
-    </Box>
-    <Box width={columns.pid}>
-      <Text color={theme.muted}>pid</Text>
+      <Text color={theme.disabled}>PORT</Text>
     </Box>
     <Box width={columns.process}>
-      <Text color={theme.muted}>process</Text>
+      <Text color={theme.disabled}>PROCESS</Text>
     </Box>
     <Box width={columns.project}>
-      <Text color={theme.muted}>project</Text>
+      <Text color={theme.disabled}>PROJECT</Text>
     </Box>
-    <Text color={theme.muted}>path</Text>
+    <Box width={columns.status}>
+      <Text color={theme.disabled}>STATUS</Text>
+    </Box>
+    <Text color={theme.disabled}>PATH</Text>
   </Box>
 );
 
-const PortRow = ({ process, isSelected }: { process: ListedPortProcess; isSelected: boolean }) => (
+const StatusBadge = ({ status }: { status: string }) => {
+  const color = status === "running" ? theme.running : theme.stopped;
+  return <Text color={color}>{status}</Text>;
+};
+
+const PortRow = ({
+  process,
+  isSelected,
+}: {
+  process: ListedPortProcess;
+  isSelected: boolean;
+}) => (
   <Box>
     <Box width={columns.marker}>
-      <Text color={isSelected ? theme.green : ""}>{isSelected ? " ▸" : "  "}</Text>
+      <Text color={isSelected ? theme.cyan : ""}>{isSelected ? " ▶" : "  "}</Text>
     </Box>
     <Box width={columns.port}>
-      <Text color={isSelected ? theme.cyan : theme.text}>{process.port}</Text>
-    </Box>
-    <Box width={columns.pid}>
-      <Text color={isSelected ? theme.text : theme.muted}>{process.pid}</Text>
+      <Text color={isSelected ? theme.cyan : theme.primary}>{process.port}</Text>
     </Box>
     <Box width={columns.process}>
-      <Text color={isSelected ? theme.text : theme.muted}>{process.processName}</Text>
+      <Text color={isSelected ? theme.primary : theme.secondary}>
+        {process.processName}
+      </Text>
     </Box>
     <Box width={columns.project}>
-      <Text color={isSelected ? theme.text : theme.muted}>{process.projectHint}</Text>
+      <Text color={isSelected ? theme.primary : theme.secondary}>
+        {process.projectHint}
+      </Text>
     </Box>
-    <Text color={isSelected ? theme.text : theme.dim}>{compactPath(process.cwd)}</Text>
+    <Box width={columns.status}>
+      <StatusBadge status={process.status} />
+    </Box>
+    <Text color={isSelected ? theme.secondary : theme.dimmed}>
+      {compactPath(process.cwd)}
+    </Text>
   </Box>
 );
 
 export const PortList = ({ ports, selectedIndex, isLoading }: PortListProps) => {
   if (isLoading && ports.length === 0) {
     return (
-      <Box flexDirection="column">
+      <Box flexDirection="column" marginTop={1}>
         <ColumnHeaders />
         <Box>
-          <Text color={theme.muted}>Scanning…</Text>
+          <Text color={theme.dimmed}>  Scanning…</Text>
         </Box>
       </Box>
     );
@@ -76,13 +93,13 @@ export const PortList = ({ ports, selectedIndex, isLoading }: PortListProps) => 
 
   if (ports.length === 0) {
     return (
-      <Box flexDirection="column">
+      <Box flexDirection="column" marginTop={1}>
         <ColumnHeaders />
         <Box marginTop={1}>
-          <Text color={theme.text}>No ports found</Text>
+          <Text color={theme.secondary}>  No ports found</Text>
         </Box>
         <Box marginTop={1}>
-          <Text color={theme.muted}>System services and low ports are hidden.</Text>
+          <Text color={theme.dimmed}>  System services and low ports are hidden.</Text>
         </Box>
       </Box>
     );
@@ -90,13 +107,16 @@ export const PortList = ({ ports, selectedIndex, isLoading }: PortListProps) => 
 
   const startIndex = Math.max(
     0,
-    Math.min(selectedIndex - Math.floor(pageSize / 2), Math.max(0, ports.length - pageSize))
+    Math.min(
+      selectedIndex - Math.floor(pageSize / 2),
+      Math.max(0, ports.length - pageSize)
+    )
   );
   const endIndex = Math.min(startIndex + pageSize, ports.length);
   const visiblePorts = ports.slice(startIndex, endIndex);
 
   return (
-    <Box flexDirection="column">
+    <Box flexDirection="column" marginTop={1}>
       <ColumnHeaders />
       {visiblePorts.map((process, index) => (
         <PortRow
@@ -107,7 +127,8 @@ export const PortList = ({ ports, selectedIndex, isLoading }: PortListProps) => 
       ))}
       {ports.length > pageSize ? (
         <Box marginTop={1}>
-          <Text color={theme.muted}>
+          <Text color={theme.dimmed}>
+            {"  "}
             {startIndex + 1}–{endIndex} of {ports.length}
           </Text>
         </Box>

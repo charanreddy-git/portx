@@ -251,7 +251,7 @@ export const PortxApp = () => {
   // --- Render ---
 
   return (
-    <Box flexDirection="column" paddingX={1} paddingY={1}>
+    <Box flexDirection="column" paddingX={2} paddingY={1}>
       <Header
         view={view}
         isSearching={isSearching}
@@ -267,7 +267,9 @@ export const PortxApp = () => {
       ) : null}
       {view === "inspect" ? <InspectPanel process={inspected} /> : null}
       {notice ? <NoticeBar notice={notice} /> : null}
-      <HelpBar view={view} isSearching={isSearching} />
+      <Box marginTop={1}>
+        <HelpBar view={view} isSearching={isSearching} />
+      </Box>
     </Box>
   );
 };

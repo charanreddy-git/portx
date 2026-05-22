@@ -8,13 +8,13 @@ interface KeyValueProps {
   valueColor?: string;
 }
 
-const labelWidth = 10;
+const labelWidth = 12;
 
 export const KeyValue = ({ label, value, valueColor }: KeyValueProps) => (
   <Box>
     <Box width={labelWidth}>
-      <Text color={theme.muted}>{label}</Text>
+      <Text color={theme.dimmed}>{label}</Text>
     </Box>
-    <Text color={valueColor ?? theme.text}>{value}</Text>
+    <Text color={valueColor ?? theme.primary}>{value}</Text>
   </Box>
 );
