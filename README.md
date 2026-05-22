@@ -1,22 +1,22 @@
 # Portx
 
-A lightweight, developer-first command-line utility for macOS to inspect, stop, and restart processes running on local ports. 
+A lightweight, developer-first command-line utility for macOS to inspect, stop, and restart processes running on local ports.
 
-Designed with minimalism and keyboard ergonomics in mind, Portx filters out macOS system noise to display only your project-specific development ports in a premium, aesthetic terminal interface.
-
----
-
-## ✨ Features
-
-- ⚡ **Zero-Daemon Architecture** — No background processes, no extra battery drain, no resource-heavy monitoring.
-- 🎨 **Minimalist Design** — Clean layout, elegant spacing, and cohesive green-and-cyan terminal theme.
-- ⌨️ **Keyboard-First TUI** — Move quickly with standard keybindings, jump, search, inspect, stop, and restart without reaching for your mouse.
-- 🔍 **Intelligent Filtering** — Automatically hides low system ports and common macOS system services, highlighting your actual projects.
-- 🔄 **Smart Process Restarting** — Remembers the working directory and command used to start your dev processes, allowing one-key restarts even after a process is terminated.
+Designed with minimalism and keyboard ergonomics in mind, Portx filters out macOS system noise to display only your project-specific development ports in a clean, aesthetic terminal interface.
 
 ---
 
-## ⚡ Prerequisites & Installation
+## Features
+
+- **Zero-Daemon Architecture** — No background processes, no extra battery drain, no resource-heavy monitoring.
+- **Minimalist Design** — Clean layout, elegant spacing, and cohesive green-and-cyan terminal theme.
+- **Keyboard-First TUI** — Move quickly with standard keybindings, jump, search, inspect, stop, and restart without reaching for your mouse.
+- **Intelligent Filtering** — Automatically hides low system ports and common macOS system services, highlighting your actual projects.
+- **Smart Process Restarting** — Remembers the working directory and command used to start your dev processes, allowing one-key restarts even after a process is terminated.
+
+---
+
+## Prerequisites and Installation
 
 Portx is designed specifically for macOS and requires Node.js.
 
@@ -25,9 +25,17 @@ Portx is designed specifically for macOS and requires Node.js.
 - **OS:** macOS (utilizes native `lsof` and `ps` utilities)
 - **Runtime:** Node.js `>= 20.0.0`
 
+### One-Line Install (Recommended)
+
+Install Portx instantly via curl:
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/charan/portx/main/install.sh | bash
+```
+
 ### Global Installation (NPM)
 
-Install Portx globally via `npm` to make the `portx` command available system-wide:
+Install Portx globally via npm to make the command available system-wide:
 
 ```bash
 npm install -g portx
@@ -64,7 +72,7 @@ If you want to install or run Portx locally:
 
 ---
 
-## 🚀 Quick Start
+## Quick Start
 
 Launch the interactive Terminal User Interface (TUI) simply by running:
 
@@ -80,7 +88,7 @@ When inside the interactive interface, use the following keys for navigation and
 | :--- | :--- | :--- |
 | `j` / `k` or `↓` / `↑` | **Navigate** | Move cursor up and down the port list. |
 | `Enter` | **Inspect** | View comprehensive details about the selected port process. |
-| `x` | **Stop** | Gracefully terminate the selected process (sends `SIGTERM`, falls back to `SIGKILL`). |
+| `x` | **Stop** | Gracefully terminate the selected process (sends SIGTERM, falls back to SIGKILL). |
 | `r` | **Restart** | Restart the selected process using the cached command and workspace path. |
 | `/` | **Search** | Instantly filter active ports by name, port number, or directory path. |
 | `g` | **Top** | Jump directly to the top of the port list. |
@@ -90,7 +98,7 @@ When inside the interactive interface, use the following keys for navigation and
 
 ---
 
-## 🛠️ CLI Commands
+## CLI Commands
 
 Portx can also be run in non-interactive mode using specific subcommands.
 
@@ -146,17 +154,17 @@ portx restart <port>
 
 ---
 
-## ⚙️ Configuration & Mechanics
+## Configuration and Mechanics
 
 ### How Port Filtering Works
 
 Portx avoids visual noise by skipping:
-- Low port numbers (typically $< 1024$) unless they are actively recognized as user dev processes.
+- Low port numbers (typically < 1024) unless they are actively recognized as user dev processes.
 - Standard macOS system listeners and background services.
 - Processes running outside your user home directory structure (unless explicitly run as dev runtimes).
 
 It prioritizes and displays processes that:
-- Use known development runtimes (e.g., `node`, `npm`, `pnpm`, `vite`, `next`, `python`, `rails`, `go`, `docker-proxy`).
+- Use known development runtimes (e.g., node, npm, pnpm, vite, next, python, rails, go, docker-proxy).
 - Run inside subdirectory hierarchies of your user directory.
 
 ### Metadata Storage
@@ -173,6 +181,6 @@ PORTX_HOME=~/.portx-test portx restart 3000
 
 ---
 
-## 📄 License
+## License
 
 This project is licensed under the MIT License.
