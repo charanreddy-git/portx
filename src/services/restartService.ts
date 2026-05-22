@@ -65,6 +65,8 @@ export class RestartService {
       stdio: "ignore"
     });
 
+    // Prevent UnhandledPromiseRejection if the detached process exits with an error or is killed
+    child.catch(() => {});
     child.unref();
 
     await this.storageService.set(port, {

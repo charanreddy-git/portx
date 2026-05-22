@@ -33,21 +33,6 @@ Install Portx instantly via curl:
 curl -fsSL https://raw.githubusercontent.com/charan/portx/main/install.sh | bash
 ```
 
-### Global Installation (NPM)
-
-Install Portx globally via npm to make the command available system-wide:
-
-```bash
-npm install -g portx
-```
-
-### Instant Execution (NPX)
-
-Run Portx instantly without a global installation:
-
-```bash
-npx portx
-```
 
 ### Building From Source
 
