@@ -23,8 +23,8 @@ export const HelpBar = ({ view, isSearching }: HelpBarProps) => {
         </Box>
         <Box marginTop={1}>
           <Hint keys="type" action="filter" />
-          <Hint keys="enter" action="done" />
-          <Hint keys="esc" action="clear" />
+          <Hint keys="⏎" action="done" />
+          <Hint keys="⎋" action="clear" />
         </Box>
       </Box>
     );
@@ -39,7 +39,7 @@ export const HelpBar = ({ view, isSearching }: HelpBarProps) => {
         <Box marginTop={1}>
           <Hint keys="r" action="restart" />
           <Hint keys="x" action="stop" />
-          <Hint keys="esc" action="back" />
+          <Hint keys="⎋" action="back" />
           <Hint keys="q" action="quit" />
         </Box>
       </Box>
@@ -52,11 +52,11 @@ export const HelpBar = ({ view, isSearching }: HelpBarProps) => {
         <Text color={theme.border}>{"─".repeat(56)}</Text>
       </Box>
       <Box marginTop={1}>
-        <Hint keys="j/k" action="move" />
-        <Hint keys="enter" action="inspect" />
+        <Hint keys="↑↓" action="move" />
+        <Hint keys="⏎" action="inspect" />
         <Hint keys="x" action="stop" />
         <Hint keys="r" action="restart" />
-        <Hint keys="/" action="search" />
+        <Hint keys="🔍" action="search" />
         <Hint keys="q" action="quit" />
       </Box>
     </Box>

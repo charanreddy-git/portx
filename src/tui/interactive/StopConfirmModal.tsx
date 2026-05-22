@@ -47,14 +47,14 @@ export const StopConfirmModal = ({ process }: StopConfirmModalProps) => {
       <Box>
         <Text color={theme.border}>│ </Text>
         <Box width={28}>
-          <Text color={theme.secondaryText}>[Enter] Confirm</Text>
+          <Text color={theme.secondaryText}>[⏎] Confirm</Text>
         </Box>
         <Text color={theme.border}> │</Text>
       </Box>
       <Box>
         <Text color={theme.border}>│ </Text>
         <Box width={28}>
-          <Text color={theme.secondaryText}>[Esc] Cancel</Text>
+          <Text color={theme.secondaryText}>[⎋] Cancel</Text>
         </Box>
         <Text color={theme.border}> │</Text>
       </Box>
