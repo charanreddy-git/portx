@@ -8,13 +8,11 @@ interface HelpBarProps {
 }
 
 const Hint = ({ keys, action }: { keys: string; action: string }) => (
-  <>
-    <Text color={theme.cyan}>{keys}</Text>
-    <Text color={theme.secondary}> {action}</Text>
-  </>
+  <Box marginRight={2}>
+    <Text color={theme.accentCyan}>[{keys}]</Text>
+    <Text color={theme.secondaryText}> {action}</Text>
+  </Box>
 );
-
-const Sep = () => <Text color={theme.disabled}>  │  </Text>;
 
 export const HelpBar = ({ view, isSearching }: HelpBarProps) => {
   if (isSearching) {
@@ -25,9 +23,7 @@ export const HelpBar = ({ view, isSearching }: HelpBarProps) => {
         </Box>
         <Box marginTop={1}>
           <Hint keys="type" action="filter" />
-          <Sep />
-          <Hint keys="↵" action="done" />
-          <Sep />
+          <Hint keys="enter" action="done" />
           <Hint keys="esc" action="clear" />
         </Box>
       </Box>
@@ -42,11 +38,8 @@ export const HelpBar = ({ view, isSearching }: HelpBarProps) => {
         </Box>
         <Box marginTop={1}>
           <Hint keys="r" action="restart" />
-          <Sep />
           <Hint keys="x" action="stop" />
-          <Sep />
           <Hint keys="esc" action="back" />
-          <Sep />
           <Hint keys="q" action="quit" />
         </Box>
       </Box>
@@ -60,15 +53,10 @@ export const HelpBar = ({ view, isSearching }: HelpBarProps) => {
       </Box>
       <Box marginTop={1}>
         <Hint keys="j/k" action="move" />
-        <Sep />
-        <Hint keys="↵" action="open" />
-        <Sep />
+        <Hint keys="enter" action="inspect" />
         <Hint keys="x" action="stop" />
-        <Sep />
         <Hint keys="r" action="restart" />
-        <Sep />
-        <Hint keys="/" action="find" />
-        <Sep />
+        <Hint keys="/" action="search" />
         <Hint keys="q" action="quit" />
       </Box>
     </Box>

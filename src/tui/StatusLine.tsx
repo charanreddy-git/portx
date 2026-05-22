@@ -9,9 +9,9 @@ interface StatusLineProps {
 }
 
 const toneColor = {
-  success: theme.green,
-  error: theme.stopped,
-  info: theme.secondary,
+  success: theme.success,
+  error: theme.danger,
+  info: theme.secondaryText,
   warning: theme.warning,
 } as const;
 
@@ -20,11 +20,11 @@ export const StatusLine = ({ tone, title, detail }: StatusLineProps) => (
     <Box>
       <Text color={toneColor[tone]}>●</Text>
       <Text>  </Text>
-      <Text color={theme.primary}>{title}</Text>
+      <Text color={theme.primaryText}>{title}</Text>
     </Box>
     {detail ? (
       <Box marginTop={1}>
-        <Text color={theme.secondary}>{detail}</Text>
+        <Text color={theme.secondaryText}>{detail}</Text>
       </Box>
     ) : null}
   </Box>

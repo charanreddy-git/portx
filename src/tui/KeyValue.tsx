@@ -13,8 +13,8 @@ const labelWidth = 12;
 export const KeyValue = ({ label, value, valueColor }: KeyValueProps) => (
   <Box>
     <Box width={labelWidth}>
-      <Text color={theme.dimmed}>{label}</Text>
+      <Text color={theme.secondaryText}>{label}</Text>
     </Box>
-    <Text color={valueColor ?? theme.primary}>{value}</Text>
+    <Text color={valueColor ?? theme.primaryText}>{value}</Text>
   </Box>
 );

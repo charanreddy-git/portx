@@ -17,7 +17,7 @@ const columns = {
   port: 8,
   process: 14,
   project: 16,
-  status: 12,
+  status: 14,
 } as const;
 
 const ColumnHeaders = () => (
@@ -42,8 +42,10 @@ const ColumnHeaders = () => (
 );
 
 const StatusBadge = ({ status }: { status: string }) => {
-  const color = status === "running" ? theme.running : theme.stopped;
-  return <Text color={color}>{status}</Text>;
+  if (status === "running") {
+    return <Text color={theme.accentGreen}>● running</Text>;
+  }
+  return <Text color={theme.danger}>✖ stopped</Text>;
 };
 
 const PortRow = ({
@@ -55,25 +57,25 @@ const PortRow = ({
 }) => (
   <Box>
     <Box width={columns.marker}>
-      <Text color={isSelected ? theme.cyan : ""}>{isSelected ? " ▶" : "  "}</Text>
+      <Text color={isSelected ? theme.accentCyan : ""}>{isSelected ? " ▶" : "  "}</Text>
     </Box>
     <Box width={columns.port}>
-      <Text color={isSelected ? theme.cyan : theme.primary}>{process.port}</Text>
+      <Text color={isSelected ? theme.accentCyan : theme.primaryText}>{process.port}</Text>
     </Box>
     <Box width={columns.process}>
-      <Text color={isSelected ? theme.primary : theme.secondary}>
+      <Text color={isSelected ? theme.primaryText : theme.secondaryText}>
         {process.processName}
       </Text>
     </Box>
     <Box width={columns.project}>
-      <Text color={isSelected ? theme.primary : theme.secondary}>
+      <Text color={isSelected ? theme.primaryText : theme.secondaryText}>
         {process.projectHint}
       </Text>
     </Box>
     <Box width={columns.status}>
       <StatusBadge status={process.status} />
     </Box>
-    <Text color={isSelected ? theme.secondary : theme.dimmed}>
+    <Text color={isSelected ? theme.secondaryText : theme.dimmed}>
       {compactPath(process.cwd)}
     </Text>
   </Box>
@@ -84,8 +86,8 @@ export const PortList = ({ ports, selectedIndex, isLoading }: PortListProps) => 
     return (
       <Box flexDirection="column" marginTop={1}>
         <ColumnHeaders />
-        <Box>
-          <Text color={theme.dimmed}>  Scanning…</Text>
+        <Box justifyContent="center" marginTop={1}>
+          <Text color={theme.dimmed}>Scanning…</Text>
         </Box>
       </Box>
     );
@@ -95,11 +97,11 @@ export const PortList = ({ ports, selectedIndex, isLoading }: PortListProps) => 
     return (
       <Box flexDirection="column" marginTop={1}>
         <ColumnHeaders />
-        <Box marginTop={1}>
-          <Text color={theme.secondary}>  No ports found</Text>
-        </Box>
-        <Box marginTop={1}>
-          <Text color={theme.dimmed}>  System services and low ports are hidden.</Text>
+        <Box justifyContent="center" marginTop={1} flexDirection="column" alignItems="center">
+          <Text color={theme.success}>✓ No active development ports found</Text>
+          <Box marginTop={1}>
+            <Text color={theme.dimmed}>Start your local app and Portx will detect it automatically.</Text>
+          </Box>
         </Box>
       </Box>
     );

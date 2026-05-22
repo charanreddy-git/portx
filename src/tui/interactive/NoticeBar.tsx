@@ -10,15 +10,15 @@ export interface Notice {
 }
 
 const toneColor = {
-  info: theme.cyan,
-  success: theme.green,
-  error: theme.stopped,
+  info: theme.accentCyan,
+  success: theme.success,
+  error: theme.danger,
 } as const;
 
 export const NoticeBar = ({ notice }: { notice: Notice }) => (
   <Box marginTop={1}>
     <Text color={toneColor[notice.tone]}>●</Text>
     <Text>  </Text>
-    <Text color={theme.primary}>{notice.text}</Text>
+    <Text color={theme.primaryText}>{notice.text}</Text>
   </Box>
 );

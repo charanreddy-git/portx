@@ -23,24 +23,33 @@ export const Header = ({
   totalCount,
   activePort,
 }: HeaderProps) => {
-  let right = "";
-  let rightColor: string = theme.dimmed;
+  let rightElement = null;
 
   if (isSearching) {
-    right = `/${query || "…"}`;
-    rightColor = theme.search;
-  } else if (isBusy) {
-    right = "working…";
-    rightColor = theme.warning;
-  } else if (isLoading) {
-    right = "scanning…";
-  } else if (view === "list") {
-    if (totalCount === 0) {
-      right = "";
-    } else if (listCount === totalCount) {
-      right = `${listCount}`;
-    } else {
-      right = `${listCount}/${totalCount}`;
+    rightElement = (
+      <Box>
+        <Text color={theme.secondaryText}>Search: </Text>
+        <Text color={theme.accentCyan} backgroundColor={theme.selected}>{query || " "}</Text>
+        <Text color={theme.accentCyan}>█</Text>
+      </Box>
+    );
+  } else {
+    let rightText = "";
+    let rightColor: string = theme.dimmed;
+
+    if (isBusy) {
+      rightText = "working…";
+      rightColor = theme.warning;
+    } else if (isLoading) {
+      rightText = "scanning…";
+    } else if (view === "list") {
+      if (totalCount > 0) {
+        rightText = listCount === totalCount ? `${listCount}` : `${listCount}/${totalCount}`;
+      }
+    }
+
+    if (rightText) {
+      rightElement = <Text color={rightColor}>{rightText}</Text>;
     }
   }
 
@@ -48,15 +57,15 @@ export const Header = ({
     <Box flexDirection="column">
       <Box justifyContent="space-between">
         <Box>
-          <Text color={theme.cyan} bold>PORTX</Text>
+          <Text color={theme.accentCyan} bold>PORTX</Text>
           {view === "inspect" && activePort ? (
             <>
               <Text color={theme.disabled}> › </Text>
-              <Text color={theme.mutedCyan}>{activePort}</Text>
+              <Text color={theme.accentCyan}>{activePort}</Text>
             </>
           ) : null}
         </Box>
-        {right ? <Text color={rightColor}>{right}</Text> : null}
+        {rightElement}
       </Box>
       <Text color={theme.dimmed}>Local Development Port Manager</Text>
       <Box marginTop={1}>

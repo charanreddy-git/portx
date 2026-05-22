@@ -11,6 +11,7 @@ import { InspectPanel } from "./InspectPanel.js";
 import { HelpBar } from "./HelpBar.js";
 import { NoticeBar } from "./NoticeBar.js";
 import type { Notice } from "./NoticeBar.js";
+import { StopConfirmModal } from "./StopConfirmModal.js";
 
 type View = "list" | "inspect";
 
@@ -35,6 +36,7 @@ export const PortxApp = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [inspected, setInspected] = useState<PortProcess | null>(null);
   const [notice, setNotice] = useState<Notice | null>(null);
+  const [confirmStop, setConfirmStop] = useState<number | null>(null);
 
   const filteredPorts = useMemo(() => {
     const q = query.trim().toLowerCase();
@@ -52,6 +54,12 @@ export const PortxApp = () => {
   const activePort = inspected?.port ?? selected?.port ?? null;
   const listCount = filteredPorts.length;
   const totalCount = ports.length;
+
+  const confirmProcess = useMemo(() => {
+    if (!confirmStop) return null;
+    if (view === "inspect" && inspected?.port === confirmStop) return inspected;
+    return ports.find((p) => p.port === confirmStop) ?? null;
+  }, [confirmStop, view, inspected, ports]);
 
   // --- Data fetching ---
 
@@ -139,12 +147,12 @@ export const PortxApp = () => {
   // --- Effects ---
 
   useEffect(() => {
-    if (view !== "list") return;
+    if (view !== "list" || confirmStop !== null) return;
 
     void refreshList(false);
     const timer = setInterval(() => void refreshList(true), refreshMs);
     return () => clearInterval(timer);
-  }, [refreshList, view]);
+  }, [refreshList, view, confirmStop]);
 
   useEffect(() => {
     setSelectedIndex((i) => Math.min(i, Math.max(0, filteredPorts.length - 1)));
@@ -159,6 +167,21 @@ export const PortxApp = () => {
     }
 
     if (isBusy) return;
+
+    // Stop Confirm mode
+    if (confirmStop !== null) {
+      if (key.escape) {
+        setConfirmStop(null);
+        return;
+      }
+      if (key.return) {
+        const portToStop = confirmStop;
+        setConfirmStop(null);
+        void stopPort(portToStop);
+        return;
+      }
+      return;
+    }
 
     // Search mode
     if (isSearching) {
@@ -207,7 +230,9 @@ export const PortxApp = () => {
     // Inspect view
     if (view === "inspect") {
       if (input === "r" && activePort) void restartPort(activePort);
-      if (input === "x" && activePort) void stopPort(activePort);
+      if (input === "x" && activePort) {
+        setConfirmStop(activePort);
+      }
       return;
     }
 
@@ -239,7 +264,7 @@ export const PortxApp = () => {
     }
 
     if (input === "x" && selected) {
-      void stopPort(selected.port);
+      setConfirmStop(selected.port);
       return;
     }
 
@@ -262,14 +287,25 @@ export const PortxApp = () => {
         totalCount={totalCount}
         activePort={activePort}
       />
-      {view === "list" ? (
-        <PortList ports={filteredPorts} selectedIndex={selectedIndex} isLoading={isLoading} />
-      ) : null}
-      {view === "inspect" ? <InspectPanel process={inspected} /> : null}
-      {notice ? <NoticeBar notice={notice} /> : null}
-      <Box marginTop={1}>
-        <HelpBar view={view} isSearching={isSearching} />
-      </Box>
+      
+      {confirmStop !== null && confirmProcess ? (
+        <StopConfirmModal process={confirmProcess} />
+      ) : (
+        <>
+          {view === "list" ? (
+            <PortList ports={filteredPorts} selectedIndex={selectedIndex} isLoading={isLoading} />
+          ) : null}
+          {view === "inspect" ? <InspectPanel process={inspected} /> : null}
+        </>
+      )}
+
+      {notice && confirmStop === null ? <NoticeBar notice={notice} /> : null}
+      
+      {confirmStop === null && (
+        <Box marginTop={1}>
+          <HelpBar view={view} isSearching={isSearching} />
+        </Box>
+      )}
     </Box>
   );
 };
