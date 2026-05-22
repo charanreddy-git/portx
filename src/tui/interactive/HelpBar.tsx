@@ -56,7 +56,7 @@ export const HelpBar = ({ view, isSearching }: HelpBarProps) => {
         <Hint keys="⏎" action="inspect" />
         <Hint keys="x" action="stop" />
         <Hint keys="r" action="restart" />
-        <Hint keys="🔍" action="search" />
+        <Hint keys="/" action="search" />
         <Hint keys="q" action="quit" />
       </Box>
     </Box>
