@@ -15,42 +15,15 @@ const systemProcessNames = new Set([
   "trustd"
 ]);
 
-const devCommandMarkers = [
-  "bun ",
-  "deno ",
-  "docker-proxy",
-  "dotnet ",
-  "go run",
-  "java ",
-  "next",
-  "node ",
-  "npm ",
-  "pnpm ",
-  "python",
-  "rails",
-  "ruby ",
-  "tsx",
-  "vite",
-  "yarn "
-];
-
-const devDirectoryMarkers = [
-  "app",
-  "apps",
-  "code",
-  "dev",
-  "git",
-  "github",
-  "projects",
-  "repo",
-  "repos",
-  "src",
-  "work",
-  "workspace"
-];
-
 export const getProjectHint = (processInfo: PortProcess): string | null => {
-  if (processInfo.port < 1024 || systemProcessNames.has(path.basename(processInfo.processName))) {
+  // Always filter out low system ports
+  if (processInfo.port < 1024) {
+    return null;
+  }
+
+  // Filter out standard macOS system daemons
+  const procName = path.basename(processInfo.processName);
+  if (systemProcessNames.has(procName)) {
     return null;
   }
 
@@ -58,24 +31,33 @@ export const getProjectHint = (processInfo: PortProcess): string | null => {
   const cwd = processInfo.cwd;
   const home = os.homedir();
 
-  if (cwd?.startsWith(`${home}${path.sep}`)) {
-    const relativePath = cwd.slice(home.length + 1).toLowerCase();
+  // 1. If running inside the user's home directory
+  if (cwd?.startsWith(`${home}${path.sep}`) || cwd === home) {
+    const relativePath = cwd === home ? "" : cwd.slice(home.length + 1).toLowerCase();
     const [firstSegment] = relativePath.split(path.sep);
 
-    if (firstSegment && !firstSegment.startsWith(".")) {
-      if (devDirectoryMarkers.some((marker) => relativePath.includes(marker))) {
-        return path.basename(cwd);
-      }
-
-      if (devCommandMarkers.some((marker) => command.includes(marker))) {
-        return path.basename(cwd);
-      }
+    // Any non-hidden user folder except system ~/Library is treated as a project
+    if (firstSegment && !firstSegment.startsWith(".") && firstSegment !== "library") {
+      return path.basename(cwd);
     }
   }
 
-  if (devCommandMarkers.some((marker) => command.includes(marker))) {
-    return path.basename(processInfo.command.split(" ")[0] ?? processInfo.processName);
+  // 2. Fallback: Check if the command or process name contains common development runtime keywords
+  const devKeywords = [
+    "node", "npm", "npx", "pnpm", "yarn", "bun", "deno",
+    "python", "pipenv", "poetry", "ruby", "rails", "irb",
+    "java", "dotnet", "go", "docker", "rust", "cargo",
+    "http-server", "live-server", "serve", "caddy", "nginx",
+    "server", "hugo", "jekyll", "gatsby", "astro", "remix",
+    "next", "nuxt", "vite", "webpack", "mix", "phoenix",
+    "php", "laravel", "artisan", "symfony"
+  ];
+
+  const searchString = `${command} ${procName.toLowerCase()}`;
+  if (devKeywords.some((keyword) => searchString.includes(keyword))) {
+    return cwd ? path.basename(cwd) : (processInfo.processName || "server");
   }
 
   return null;
 };
+
